@@ -85,10 +85,25 @@ export class InvoiceService {
     } else {
       // Server-side error or CORS issue
       if (error.status === 0) {
-        errorMessage = `Cannot connect to server at ${baseUrl}. Please ensure:
-1. Backend server is running on http://localhost:5000
-2. CORS is configured to allow requests from http://localhost:4200
-3. No firewall is blocking the connection`;
+        errorMessage = `Network connection failed to backend server. Please check:
+
+1. Backend server status:
+   - Ensure your backend is running on http://localhost:5000
+   - Check if the server started without errors
+   - Verify the API endpoints are accessible
+
+2. CORS configuration:
+   - Backend must allow requests from http://localhost:4200
+   - Check CORS headers in backend response
+
+3. Network connectivity:
+   - Verify no firewall is blocking localhost connections
+   - Check if antivirus software is interfering
+   - Try accessing http://localhost:5000/api directly in browser
+
+4. Port conflicts:
+   - Ensure port 5000 is not used by another application
+   - Check if backend is running on a different port`;
       } else {
         errorMessage = `Server Error: ${error.status} - ${error.message}`;
         if (error.error?.message) {
@@ -102,8 +117,20 @@ export class InvoiceService {
       statusText: error.statusText,
       url: error.url,
       message: error.message,
-      error: error.error
+      error: error.error,
+      timestamp: new Date().toISOString(),
+      troubleshooting: 'Check browser Network tab for more details'
     });
+    
+    // Additional debugging for status 0 errors
+    if (error.status === 0) {
+      console.warn('🔍 Debugging tips for status 0 errors:');
+      console.warn('- Open browser DevTools → Network tab');
+      console.warn('- Look for failed requests to localhost:5000');
+      console.warn('- Check if request shows "CORS error" or "net::ERR_CONNECTION_REFUSED"');
+      console.warn('- Verify backend server logs for incoming requests');
+    }
+    
     return throwError(() => new Error(errorMessage));
   }
 }
