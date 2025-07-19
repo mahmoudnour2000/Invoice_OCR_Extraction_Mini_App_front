@@ -32,7 +32,7 @@ export class InvoiceService {
           // If HTTPS fails with status 0, try HTTP fallback
           if (error.status === 0 && this.baseUrl.startsWith('https://')) {
             console.warn('HTTPS connection failed, attempting HTTP fallback...');
-            this.baseUrl = 'http://localhost:5001/api';
+            this.baseUrl = 'http://localhost:5000/api';
             return this.http.post<UploadResponse>(`${this.baseUrl}/Upload`, formData, { headers })
               .pipe(catchError(this.handleError));
           }
@@ -94,7 +94,7 @@ export class InvoiceService {
     } else {
       // Server-side error or CORS issue
       if (error.status === 0) {
-        errorMessage = 'Cannot connect to server. Please check if the backend is running on https://localhost:5001 and CORS is configured to allow requests from http://localhost:4200';
+        errorMessage = 'Cannot connect to server. Please check if the backend is running on http://localhost:5000 and CORS is configured to allow requests from http://localhost:4200';
       } else {
         errorMessage = `Server Error: ${error.status} - ${error.message}`;
         if (error.error?.message) {
