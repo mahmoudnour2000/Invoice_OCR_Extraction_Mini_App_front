@@ -1,0 +1,176 @@
+<div class="upload-container">
+  <div *ngIf="successMessage" class="success-overlay">
+    <div class="success-message-large">{{ successMessage }}</div>
+  </div>
+  <div class="upload-card">
+    <h2>Upload Invoice</h2>
+    <p class="subtitle">Upload PDF, JPG, or PNG files for OCR processing</p>
+    
+    <!-- Upload Area - Hide when data is extracted -->
+    <div *ngIf="!extractedInvoice" class="upload-area" 
+         [class.dragover]="isDragOver"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)"
+         (click)="fileInput.click()">
+      <div class="upload-content">
+        <div class="upload-icon">📄</div>
+        <p>Drag and drop your invoice here or click to browse</p>
+        <p class="file-types">Supported: PDF, JPG, PNG</p>
+      </div>
+      <input #fileInput 
+             type="file" 
+             accept=".pdf,.jpg,.jpeg,.png"
+             (change)="onFileSelected($event)"
+             style="display: none;">
+    </div>
+
+    <div *ngIf="selectedFile && !extractedInvoice" class="selected-file">
+      <h3>Selected File:</h3>
+      <div class="file-info">
+        <span class="file-name">{{ selectedFile.name }}</span>
+        <span class="file-size">({{ formatFileSize(selectedFile.size) }})</span>
+        <button class="remove-btn" (click)="removeFile()">✕</button>
+      </div>
+    </div>
+
+    <button *ngIf="selectedFile && !extractedInvoice" 
+            class="upload-btn" 
+            [disabled]="!selectedFile || isUploading"
+            (click)="uploadFile()">
+      <span *ngIf="!isUploading">Upload & Process</span>
+      <span *ngIf="isUploading">Processing...</span>
+    </button>
+
+    <div *ngIf="uploadProgress > 0 && !extractedInvoice" class="progress-bar">
+      <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+      <button *ngIf="extractedInvoice" class="btn-secondary" (click)="resetUpload()">
+        Upload Another File
+      </button>
+    </div>
+
+    <!-- Editable Form for Extracted Data -->
+    <div *ngIf="extractedInvoice" class="extracted-form">
+      <div class="form-header">
+        <h3>Review & Edit Extracted Data</h3>
+        <button class="btn-secondary" (click)="resetUpload()">Upload Another File</button>
+      </div>
+      
+      <form class="invoice-form" #invoiceForm="ngForm">
+        <div class="form-section">
+          <h4>Invoice Information</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="invoiceNumber">Invoice Number *</label>
+              <input type="text" 
+                     id="invoiceNumber" 
+                     name="invoiceNumber"
+                     [(ngModel)]="extractedInvoice.invoiceNumber" 
+                     required
+                     class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="invoiceDate">Date *</label>
+              <input type="date" 
+                     id="invoiceDate" 
+                     name="invoiceDate"
+                     [(ngModel)]="extractedInvoice.date" 
+                     required
+                     class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Customer Information</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="customerName">Customer Name *</label>
+              <input type="text" 
+                     id="customerName" 
+                     name="customerName"
+                     [(ngModel)]="extractedInvoice.customerName" 
+                     required
+                     class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Amount Information</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="vat">VAT</label>
+              <input type="number" 
+                     id="vat" 
+                     name="vat"
+                     [(ngModel)]="extractedInvoice.vat" 
+                     step="0.01"
+                     min="0"
+                     class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="totalAmount">Total Amount *</label>
+              <input type="number" 
+                     id="totalAmount" 
+                     name="totalAmount"
+                     [(ngModel)]="extractedInvoice.totalAmount" 
+                     step="0.01"
+                     min="0"
+                     required
+                     class="form-control total-field">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section" *ngIf="extractedInvoice.details && extractedInvoice.details.length">
+          <h4>Invoice Details</h4>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Unit Price</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of extractedInvoice.details">
+                  <td>
+                    <input type="text" [(ngModel)]="item.description" name="desc{{item.id}}" class="form-control">
+                  </td>
+                  <td>
+                    <input type="number" [(ngModel)]="item.quantity" name="qty{{item.id}}" class="form-control">
+                  </td>
+                  <td>
+                    <input type="number" [(ngModel)]="item.unitPrice" name="unit{{item.id}}" class="form-control">
+                  </td>
+                  <td>
+                    <input type="number" [(ngModel)]="item.lineTotal" name="total{{item.id}}" class="form-control" readonly>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="resetUpload()">
+            Cancel
+          </button>
+          <button type="button" 
+                  class="btn-primary" 
+                  [disabled]="!invoiceForm.form.valid || isSaving"
+                  (click)="saveInvoice()">
+            {{ isSaving ? 'Saving...' : 'Save Invoice' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

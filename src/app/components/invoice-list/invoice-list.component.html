@@ -1,0 +1,72 @@
+<div class="invoice-list-container">
+  <div class="header">
+    <h2>Invoice Management</h2>
+    <button class="btn-primary" routerLink="/create-invoice">
+      + Create New Invoice
+    </button>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <input type="text" 
+             placeholder="Search by customer name..." 
+             [(ngModel)]="searchTerm"
+             (input)="onSearchChange()"
+             class="search-input">
+      <button class="search-btn" (click)="searchInvoices()">🔍</button>
+    </div>
+    <button class="btn-secondary" (click)="loadAllInvoices()">
+      Show All
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading invoices...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && invoices.length === 0 && !errorMessage" class="empty-state">
+    <div class="empty-icon">📄</div>
+    <h3>No invoices found</h3>
+    <p>Start by uploading an invoice or creating one manually.</p>
+    <button class="btn-primary" routerLink="/upload">Upload Invoice</button>
+  </div>
+
+  <div *ngIf="!loading && invoices.length > 0" class="invoice-grid">
+    <div *ngFor="let invoice of invoices" class="invoice-card">
+      <div class="invoice-header">
+        <h3>{{ invoice.invoiceNumber }}</h3>
+        <span class="invoice-date">
+          {{ invoice['invoiceDate'] ? (invoice['invoiceDate'] | date:'shortDate') : '' }}
+        </span>
+      </div>
+      <div class="invoice-details">
+        <div class="detail-row">
+          <span class="label">Customer:</span>
+          <span class="value">{{ invoice.customerName }}</span>
+        </div>
+        <div class="detail-row" *ngIf="invoice['vat'] != null">
+          <span class="label">VAT:</span>
+          <span class="value">{{ invoice['vat'] | number:'1.2-2' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Total:</span>
+          <span class="value amount">$ {{ invoice.totalAmount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+      <div class="invoice-actions">
+        <button class="btn-view" [routerLink]="['/invoice', invoice.id]">View</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && invoices.length > 0" class="pagination">
+    <p class="results-count">
+      Showing {{ invoices.length }} invoice{{ invoices.length !== 1 ? 's' : '' }}
+    </p>
+  </div>
+</div> 

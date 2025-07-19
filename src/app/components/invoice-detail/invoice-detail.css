@@ -1,0 +1,355 @@
+.invoice-detail-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+  }
+  .detail-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.7rem;
+    font-weight: 700;
+  }
+  .btn-back {
+    background: #f8f9fa;
+    color: #667eea;
+    border: 1px solid #667eea;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 1rem;
+  }
+  .btn-back:hover {
+    background: #e6eaff;
+    color: #4b5bdc;
+  }
+  .loading {
+    text-align: center;
+    padding: 3rem;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .error-message {
+    background: #ffe6e6;
+    color: #d63031;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 4px solid #d63031;
+  }
+
+  .invoice-detail {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  .invoice-date {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    font-size: 1.1rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-primary:hover, .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .invoice-content {
+    padding: 2rem;
+  }
+
+  .parties-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .vendor-info h3, .customer-info h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .info-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .info-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .address {
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+
+  .line-items-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem 0;
+  }
+
+  .line-items-section h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    background: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.04);
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .line-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    text-align: center;
+  }
+
+  .line-items-table th {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .line-items-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 1.05rem;
+    color: #333;
+  }
+
+  .line-items-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .line-items-table tr:nth-child(even) {
+    background: #f4f7ff;
+  }
+
+  .description {
+    font-weight: 500;
+    color: #333;
+  }
+
+  .quantity, .unit-price, .total-price {
+    color: #666;
+  }
+
+  .total-price {
+    font-weight: 600;
+    color: #27ae60;
+  }
+
+  .totals-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .totals-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-width: 300px;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding: 0.25rem 0;
+  }
+
+  .total-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .total-row .label {
+    color: #666;
+    font-weight: 500;
+  }
+
+  .total-row .value {
+    color: #333;
+    font-weight: 600;
+  }
+
+  .final-total {
+    border-top: 2px solid #e9ecef;
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .final-total .label {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .final-total .value {
+    color: #27ae60;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .metadata-section h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .metadata-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .metadata-item .label {
+    color: #666;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .metadata-item .value {
+    color: #333;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+    
+    .header-actions {
+      justify-content: center;
+    }
+    
+    .parties-section {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .totals-section {
+      justify-content: stretch;
+    }
+    
+    .totals-card {
+      min-width: auto;
+    }
+    .invoice-detail-container {
+      padding: 0 0.5rem;
+    }
+    .detail-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .line-items-table th, .line-items-table td {
+      padding: 0.5rem;
+      font-size: 0.95rem;
+    }
+  }

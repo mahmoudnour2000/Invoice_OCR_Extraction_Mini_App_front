@@ -22,16 +22,6 @@ export const routes: Routes = [
     title: 'Invoice Details'
   },
   {
-    path: 'invoice/:id/edit',
-    loadComponent: () => import('./components/invoice-edit/invoice-edit.component').then(m => m.InvoiceEditComponent),
-    title: 'Edit Invoice'
-  },
-  {
-    path: 'create-invoice',
-    loadComponent: () => import('./components/invoice-create/invoice-create.component').then(m => m.InvoiceCreateComponent),
-    title: 'Create Invoice'
-  },
-  {
     path: '**',
     redirectTo: '/upload'
   }
