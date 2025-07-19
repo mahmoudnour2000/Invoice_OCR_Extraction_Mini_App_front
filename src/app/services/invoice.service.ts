@@ -28,16 +28,6 @@ export class InvoiceService {
     
     return this.http.post<UploadResponse>(`${this.baseUrl}/Upload`, formData, { headers })
       .pipe(
-        catchError((error) => {
-          // If HTTPS fails with status 0, try HTTP fallback
-          if (error.status === 0 && this.baseUrl.startsWith('https://')) {
-            console.warn('HTTPS connection failed, attempting HTTP fallback...');
-            this.baseUrl = 'http://localhost:5000/api';
-            return this.http.post<UploadResponse>(`${this.baseUrl}/Upload`, formData, { headers })
-              .pipe(catchError(this.handleError));
-          }
-          return this.handleError(error);
-        }),
         catchError(this.handleError)
       );
   }
@@ -94,7 +84,10 @@ export class InvoiceService {
     } else {
       // Server-side error or CORS issue
       if (error.status === 0) {
-        errorMessage = 'Cannot connect to server. Please check if the backend is running on http://localhost:5000 and CORS is configured to allow requests from http://localhost:4200';
+        errorMessage = `Cannot connect to server at ${this.baseUrl}. Please ensure:
+1. Backend server is running on http://localhost:5000
+2. CORS is configured to allow requests from http://localhost:4200
+3. No firewall is blocking the connection`;
       } else {
         errorMessage = `Server Error: ${error.status} - ${error.message}`;
         if (error.error?.message) {
@@ -103,7 +96,13 @@ export class InvoiceService {
       }
     }
     
-    console.error('Invoice Service Error:', error);
+    console.error('Invoice Service Error Details:', {
+      status: error.status,
+      statusText: error.statusText,
+      url: error.url,
+      message: error.message,
+      error: error.error
+    });
     return throwError(() => new Error(errorMessage));
   }
 }
