@@ -8,7 +8,7 @@ import { Invoice, InvoiceDetails, UploadResponse, ApiResponse } from '../models/
   providedIn: 'root'
 })
 export class InvoiceService {
-  private baseUrl = 'http://localhost:5001/api';
+  private baseUrl = 'http://localhost:5000/api';
   
   private httpOptions = {
     headers: new HttpHeaders({
@@ -23,21 +23,9 @@ export class InvoiceService {
     const formData = new FormData();
     formData.append('file', file);
     
-    const headers = new HttpHeaders();
-    // Remove Content-Type header to let browser set it with boundary for FormData
-    
-    return this.http.post<UploadResponse>(`${this.baseUrl}/Upload`, formData, { headers })
+    // Don't set any headers for FormData - let browser handle it
+    return this.http.post<UploadResponse>(`${this.baseUrl}/Upload`, formData)
       .pipe(
-        catchError((error) => {
-          // If HTTPS fails with status 0, try HTTP fallback
-          if (error.status === 0 && this.baseUrl.startsWith('https://')) {
-            console.warn('HTTPS connection failed, attempting HTTP fallback...');
-            this.baseUrl = 'http://localhost:5001/api';
-            return this.http.post<UploadResponse>(`${this.baseUrl}/Upload`, formData, { headers })
-              .pipe(catchError(this.handleError));
-          }
-          return this.handleError(error);
-        }),
         catchError(this.handleError)
       );
   }
@@ -89,17 +77,16 @@ export class InvoiceService {
     let errorMessage = 'An unknown error occurred';
     
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Client Error: ${error.error.message}`;
     } else {
-      // Server-side error or CORS issue
       if (error.status === 0) {
-        errorMessage = 'Cannot connect to server. Please check if the backend is running on https://localhost:5001 and CORS is configured to allow requests from http://localhost:4200';
+        errorMessage = 'Cannot connect to server. Please ensure the backend is running and CORS is properly configured.';
+      } else if (error.status === 400) {
+        errorMessage = error.error?.message || 'Invalid request data';
+      } else if (error.status === 500) {
+        errorMessage = error.error?.message || 'Server error occurred';
       } else {
-        errorMessage = `Server Error: ${error.status} - ${error.message}`;
-        if (error.error?.message) {
-          errorMessage = error.error.message;
-        }
+        errorMessage = error.error?.message || `Server Error: ${error.status}`;
       }
     }
     
