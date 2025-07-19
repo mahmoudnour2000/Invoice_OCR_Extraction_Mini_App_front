@@ -381,7 +381,11 @@ export class InvoiceListComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        this.errorMessage = error.message || 'Failed to load invoices';
+        if (error.message && error.message.includes('Network connection failed')) {
+          this.errorMessage = 'Backend server connection failed. Please ensure your backend server is running on http://localhost:5000 and try again.';
+        } else {
+          this.errorMessage = error.message || 'Failed to load invoices';
+        }
       }
     });
   }
@@ -424,7 +428,11 @@ export class InvoiceListComponent implements OnInit {
       error: (error) => {
         this.loading = false;
         this.invoices = [];
-        this.errorMessage = error.message || 'Search failed';
+        if (error.message && error.message.includes('Network connection failed')) {
+          this.errorMessage = 'Backend server connection failed. Please ensure your backend server is running on http://localhost:5000 and try again.';
+        } else {
+          this.errorMessage = error.message || 'Search failed';
+        }
       }
     });
   }
