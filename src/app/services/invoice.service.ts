@@ -76,6 +76,7 @@ export class InvoiceService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
+    const baseUrl = 'http://localhost:5000/api';
     let errorMessage = 'An unknown error occurred';
     
     if (error.error instanceof ErrorEvent) {
@@ -84,7 +85,7 @@ export class InvoiceService {
     } else {
       // Server-side error or CORS issue
       if (error.status === 0) {
-        errorMessage = `Cannot connect to server at ${this.baseUrl}. Please ensure:
+        errorMessage = `Cannot connect to server at ${baseUrl}. Please ensure:
 1. Backend server is running on http://localhost:5000
 2. CORS is configured to allow requests from http://localhost:4200
 3. No firewall is blocking the connection`;
