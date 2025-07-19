@@ -8,7 +8,7 @@ import { Invoice, InvoiceDetails, UploadResponse, ApiResponse } from '../models/
   providedIn: 'root'
 })
 export class InvoiceService {
-  private baseUrl = 'https://localhost:5001/api';
+  private baseUrl = 'http://localhost:5000/api';
   
   private httpOptions = {
     headers: new HttpHeaders({
