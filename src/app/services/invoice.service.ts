@@ -80,17 +80,18 @@ export class InvoiceService {
       errorMessage = `Client Error: ${error.error.message}`;
     } else {
       if (error.status === 0) {
-        errorMessage = 'Cannot connect to server. Please ensure the backend is running and CORS is properly configured.';
-      } else if (error.status === 400) {
-        errorMessage = error.error?.message || 'Invalid request data';
-      } else if (error.status === 500) {
-        errorMessage = error.error?.message || 'Server error occurred';
+        errorMessage = 'Cannot connect to server. Please check if the backend is running on https://localhost:5001 and CORS is configured to allow requests from http://localhost:4200';
       } else {
         errorMessage = error.error?.message || `Server Error: ${error.status}`;
       }
     }
     
-    console.error('Invoice Service Error:', error);
+    console.error('Invoice Service Error:', {
+      status: error.status,
+      message: errorMessage,
+      url: error.url
+    });
+    
     return throwError(() => new Error(errorMessage));
   }
 }
